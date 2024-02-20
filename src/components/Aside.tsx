@@ -1,4 +1,5 @@
 // import React from "React";
+import { NavLink } from "react-router-dom";
 
 const Start = () => (
   <svg
@@ -60,17 +61,23 @@ const Update = () => (
   </svg>
 );
 
+const NewPlaylist = () => (
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" preserveAspectRatio="xMidYMid meet" focusable="false"><g><path d="M20,12h-8v8h-1v-8H3v-1h8V3h1v8h8V12z"></path></g></svg>
+)
+
 type Props = {
   asideActive: boolean;
 };
 
 const Aside = ({ asideActive }: Props) => {
   return (
-    <aside className=" border-r border-zinc-800 flex justify-center items-start text-[10px] ">
+    <aside className=" border-r border-zinc-800 flex flex-col justify-start items-center text-[10px] ">
       <ul className="w-full p-2 overflow-x-auto">
         <li>
-          <button
-            className={`hover:bg-zinc-800 bg-zinc-800 py-3 flex flex-wrap items-center ${
+          <NavLink to="/"
+          >
+            <button
+            className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
               asideActive ? "justify-start gap-4 px-5" : "justify-center"
             } rounded-lg w-full text-ellipsis whitespace-nowrap`}
           >
@@ -84,9 +91,11 @@ const Aside = ({ asideActive }: Props) => {
             >
               Inicio
             </p>
-          </button>
+            </button>
+          </NavLink>
         </li>
         <li>
+          <NavLink to="/explore">
           <button
             className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
               asideActive ? "justify-start gap-4 px-5" : "justify-center"
@@ -103,8 +112,10 @@ const Aside = ({ asideActive }: Props) => {
               Explorar
             </p>
           </button>
+          </NavLink>
         </li>
         <li>
+          <NavLink to="/library">
           <button
             className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
               asideActive ? "justify-start gap-4 px-5" : "justify-center"
@@ -121,8 +132,10 @@ const Aside = ({ asideActive }: Props) => {
               Mi biblioteca
             </p>
           </button>
+          </NavLink>
         </li>
         <li>
+          <NavLink to="/music_premium">
           <button
             className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
               asideActive ? "justify-start gap-4 px-5" : "justify-center"
@@ -139,8 +152,29 @@ const Aside = ({ asideActive }: Props) => {
               Actualizar
             </p>
           </button>
+          </NavLink>
         </li>
       </ul>
+      {
+        asideActive &&
+        <>
+          <div className="border-t border-zinc-700 mx-0 my-6 w-[192px]"></div>
+          <button
+            className={`hover:bg-zinc-800 bg-zinc-800 py-2 w-[192px] flex items-center justify-center gap-2 px-5 rounded-3xl text-ellipsis whitespace-nowrap`}
+          >
+            <NewPlaylist />
+            <p className=" text-sm font-semibold">
+              Nueva lista
+            </p>
+          </button>
+        </>
+      }
+      <style>
+        {`.active button{
+            background-color: #1D1D1D;
+          }
+        `}
+      </style>
     </aside>
   );
 };

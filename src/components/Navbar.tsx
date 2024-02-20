@@ -1,4 +1,5 @@
 import React from "React";
+import { Link } from "react-router-dom";
 
 import { Input } from "@/components/SearchBar.tsx";
 import {
@@ -67,7 +68,7 @@ type Props = {
 const Navbar = ({ setAsideActive }: Props) => {
   return (
     <nav className="row-span-1 col-span-2 flex items-center border-b border-zinc-800">
-      <div className="flex gap-2 items-center w-full">
+      <div className="flex gap-2 items-center w-full justify-between">
         <div className=" flex gap-4 items-center pl-4">
           <button
             onClick={() => setAsideActive((value) => !value)}
@@ -84,7 +85,7 @@ const Navbar = ({ setAsideActive }: Props) => {
             className="w-[480px] font-semibold h-[40px]"
           />
         </div>
-        <div className=" text-white gap-4 pr-[100px] flex items-center">
+        <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
           <Choromecast />
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -98,13 +99,28 @@ const Navbar = ({ setAsideActive }: Props) => {
               align="end"
               className="bg-zinc-800 border-none"
             >
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="w-[300px]">
+                <div className="flex flex-col items-center w-full gap-2">
+                  <div className="flex items-center gap-4 w-full">
+                    <img src="https://avatars.githubusercontent.com/u/98718461?v=4" alt="user" className="w-10 h-10 object-cover aspect-square rounded-full"/>
+                    <div className="flex flex-col">
+                      <p className="text-base">Lautaro</p>
+                      <p>lautibunko@gmail.com</p>
+                    </div>
+                  </div>  
+                  <Link to="/#">
+                    <p className=" font-normal text-blue-500">
+                      Gestionar tu cuenta de Google
+                    </p>
+                  </Link>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="border-t border-zinc-700"/>
               <DropdownMenuItem>Tu canal</DropdownMenuItem>
               <DropdownMenuItem>Suscribirse a Music Premium</DropdownMenuItem>
               <DropdownMenuItem>Cambiar de cuenta</DropdownMenuItem>
               <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="border-t border-zinc-700"/>
               <DropdownMenuItem>Subir música</DropdownMenuItem>
               <DropdownMenuItem>Historial</DropdownMenuItem>
               <DropdownMenuItem>Configuración</DropdownMenuItem>
