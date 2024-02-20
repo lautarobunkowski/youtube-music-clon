@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "React";
 
 import cn from "clsx";
 
@@ -25,7 +25,7 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
-      <div className="relative w-fit">
+      <>
         <Lupa />
         <input
           type={type}
@@ -36,7 +36,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-      </div>
+      </>
     );
   }
 );

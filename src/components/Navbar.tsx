@@ -1,4 +1,14 @@
+import React from "React";
+
 import { Input } from "@/components/SearchBar.tsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/Dropdown"
 
 const Menu = () => (
   <svg
@@ -35,24 +45,50 @@ const Logo = () => (
   </svg>
 );
 
-const Navbar = () => {
+const Choromecast = () => (
+  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" width="24" height="24" fill="currentColor"><g><path d="M22,20h-8v-1h7V5H3v3H2V4h20V20z M2,17.32V20h2.73C4.73,18.52,3.51,17.32,2,17.32z M2,13.75v1.79c2.51,0,4.55,2,4.55,4.46 h1.82C8.36,16.55,5.52,13.75,2,13.75z M2,10.18v1.79c4.52,0,8.18,3.6,8.18,8.03H12C12,14.57,7.52,10.18,2,10.18z"></path></g></svg>
+)
+
+const Navbar: React.FC = () => {
   return (
     <nav className="row-span-1 col-span-2 flex items-center border-b border-zinc-800">
       <div className="flex gap-2 items-center w-full">
-        <div className=" flex gap-2 items-center pl-4">
+        <div className=" flex gap-4 items-center pl-4">
           <button className="rounded-full p-2 hover:bg-zinc-800 active:bg-zinc-600">
             <Menu />
           </button>
           <Logo />
         </div>
-        <div className="hidden flex-1 lg:flex lg:ml-24 items-center justify-center xl:justify-start">
+        <div className="hidden flex-1 lg:flex lg:ml-24 xl:ml-4 items-center justify-center xl:justify-start relative">
           <Input
             type="search"
             placeholder="Busca canciones, álbumes, artistas y pódcasts"
-            className="w-[480px] font-semibold"
+            className="w-[480px] font-semibold h-[40px]"
           />
         </div>
-        <div className="w-[10%] bg-slate-800"></div>
+        <div className=" text-white gap-4 pr-[100px] flex items-center">
+          <Choromecast/>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+                <img src="https://avatars.githubusercontent.com/u/98718461?v=4" alt="user" className="w-7 object-cover aspect-square rounded-full"/>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-none">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Tu canal</DropdownMenuItem>
+              <DropdownMenuItem>Suscribirse a Music Premium</DropdownMenuItem>
+              <DropdownMenuItem>Cambiar de cuenta</DropdownMenuItem>
+              <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Subir música</DropdownMenuItem>
+              <DropdownMenuItem>Historial</DropdownMenuItem>
+              <DropdownMenuItem>Configuración</DropdownMenuItem>
+              <DropdownMenuItem>Términos y Política de Privacidad</DropdownMenuItem>
+              <DropdownMenuItem>Ayuda</DropdownMenuItem>
+              <DropdownMenuItem>Enviar sugerencias</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </nav>
   );
