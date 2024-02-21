@@ -1,11 +1,14 @@
-// import { useState, useEffect } from "React";
+type Props = {
+  asideActive: boolean;
+};
 
-// type Props = {}
-
-// const Main = (props: Props) => {
-const Main = () => {
+const Main = ({ asideActive }: Props) => {
   return (
-    <div className="main w-full overflow-y-auto">
+    <div
+      className={`main w-full h-full pt-[65px] overflow-auto
+      ${asideActive ? "pl-[240px]" : "pl-[75px]"}
+      `}
+    >
       <div className="h-[2000px]"></div>
     </div>
   );
