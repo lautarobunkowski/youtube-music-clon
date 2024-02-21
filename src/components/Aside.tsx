@@ -1,5 +1,6 @@
 // import React from "React";
 import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "React";
 
 const Start = () => (
   <svg
@@ -62,113 +63,136 @@ const Update = () => (
 );
 
 const NewPlaylist = () => (
-  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" preserveAspectRatio="xMidYMid meet" focusable="false"><g><path d="M20,12h-8v8h-1v-8H3v-1h8V3h1v8h8V12z"></path></g></svg>
-)
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="currentColor"
+    preserveAspectRatio="xMidYMid meet"
+    focusable="false"
+  >
+    <g>
+      <path d="M20,12h-8v8h-1v-8H3v-1h8V3h1v8h8V12z"></path>
+    </g>
+  </svg>
+);
 
 type Props = {
   asideActive: boolean;
 };
 
 const Aside = ({ asideActive }: Props) => {
+  const [scroll, setScroll] = useState(0);
+
+  useEffect(() => {
+    const main = document.querySelector(".main");
+
+    main?.addEventListener("scroll", () => setScroll(main?.scrollTop));
+
+    return () => {
+      main?.removeEventListener("scroll", () => setScroll(main?.scrollTop));
+    };
+  }, []);
+
   return (
-    <aside className=" border-r border-zinc-800 flex flex-col justify-start items-center text-[10px] ">
+    <aside
+      className={`border-r flex flex-col justify-start items-center text-[10px] ${
+        scroll > 0 ? "bg-[#020202] border-zinc-800" : "border-transparent"
+      }`}
+    >
       <ul className="w-full p-2 overflow-x-auto">
         <li>
-          <NavLink to="/"
-          >
+          <NavLink to="/">
             <button
-            className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
-              asideActive ? "justify-start gap-4 px-5" : "justify-center"
-            } rounded-lg w-full text-ellipsis whitespace-nowrap`}
-          >
-            <Start />
-            <p
-              className={`${
-                asideActive
-                  ? "w-auto m-0 text-base font-semibold"
-                  : "w-full mt-1"
-              }`}
+              className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
+                asideActive ? "justify-start gap-4 px-5" : "justify-center"
+              } rounded-lg w-full text-ellipsis whitespace-nowrap`}
             >
-              Inicio
-            </p>
+              <Start />
+              <p
+                className={`${
+                  asideActive
+                    ? "w-auto m-0 text-base font-semibold"
+                    : "w-full mt-1"
+                }`}
+              >
+                Inicio
+              </p>
             </button>
           </NavLink>
         </li>
         <li>
           <NavLink to="/explore">
-          <button
-            className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
-              asideActive ? "justify-start gap-4 px-5" : "justify-center"
-            } rounded-lg w-full text-ellipsis whitespace-nowrap`}
-          >
-            <Explore />
-            <p
-              className={`${
-                asideActive
-                  ? "w-auto m-0 text-base font-semibold"
-                  : "w-full mt-1"
-              }`}
+            <button
+              className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
+                asideActive ? "justify-start gap-4 px-5" : "justify-center"
+              } rounded-lg w-full text-ellipsis whitespace-nowrap`}
             >
-              Explorar
-            </p>
-          </button>
+              <Explore />
+              <p
+                className={`${
+                  asideActive
+                    ? "w-auto m-0 text-base font-semibold"
+                    : "w-full mt-1"
+                }`}
+              >
+                Explorar
+              </p>
+            </button>
           </NavLink>
         </li>
         <li>
           <NavLink to="/library">
-          <button
-            className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
-              asideActive ? "justify-start gap-4 px-5" : "justify-center"
-            } rounded-lg w-full text-ellipsis whitespace-nowrap`}
-          >
-            <Library />
-            <p
-              className={`${
-                asideActive
-                  ? "w-auto m-0 text-base font-semibold"
-                  : "w-full mt-1"
-              }`}
+            <button
+              className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
+                asideActive ? "justify-start gap-4 px-5" : "justify-center"
+              } rounded-lg w-full text-ellipsis whitespace-nowrap`}
             >
-              Mi biblioteca
-            </p>
-          </button>
+              <Library />
+              <p
+                className={`${
+                  asideActive
+                    ? "w-auto m-0 text-base font-semibold"
+                    : "w-full mt-1"
+                }`}
+              >
+                Mi biblioteca
+              </p>
+            </button>
           </NavLink>
         </li>
         <li>
           <NavLink to="/music_premium">
-          <button
-            className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
-              asideActive ? "justify-start gap-4 px-5" : "justify-center"
-            } rounded-lg w-full text-ellipsis whitespace-nowrap`}
-          >
-            <Update />
-            <p
-              className={`${
-                asideActive
-                  ? "w-auto m-0 text-base font-semibold"
-                  : "w-full mt-1"
-              }`}
+            <button
+              className={`hover:bg-zinc-800 py-3 flex flex-wrap items-center ${
+                asideActive ? "justify-start gap-4 px-5" : "justify-center"
+              } rounded-lg w-full text-ellipsis whitespace-nowrap`}
             >
-              Actualizar
-            </p>
-          </button>
+              <Update />
+              <p
+                className={`${
+                  asideActive
+                    ? "w-auto m-0 text-base font-semibold"
+                    : "w-full mt-1"
+                }`}
+              >
+                Actualizar
+              </p>
+            </button>
           </NavLink>
         </li>
       </ul>
-      {
-        asideActive &&
+      {asideActive && (
         <>
           <div className="border-t border-zinc-700 mx-0 my-6 w-[192px]"></div>
           <button
             className={`hover:bg-zinc-800 bg-zinc-800 py-2 w-[192px] flex items-center justify-center gap-2 px-5 rounded-3xl text-ellipsis whitespace-nowrap`}
           >
             <NewPlaylist />
-            <p className=" text-sm font-semibold">
-              Nueva lista
-            </p>
+            <p className=" text-sm font-semibold">Nueva lista</p>
           </button>
         </>
-      }
+      )}
       <style>
         {`.active button{
             background-color: #1D1D1D;

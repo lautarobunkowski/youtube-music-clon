@@ -6,9 +6,7 @@
 const Main = () => {
   return (
     <div className="main w-full overflow-y-auto">
-      <div className="h-[2000px]">
-        <p>Main</p>
-      </div>
+      <div className="h-[2000px]"></div>
     </div>
   );
 };

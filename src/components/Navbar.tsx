@@ -93,9 +93,9 @@ const Navbar = ({ setAsideActive }: Props) => {
 
   return (
     <nav
-      className={`row-span-1 col-span-2 flex items-center ${
-        scroll > 0 ? "border-b" : ""
-      }  border-zinc-800 h-[64px]`}
+      className={`row-span-1 col-span-2 flex items-center border-b ${
+        scroll > 0 ? "border-zinc-800 bg-[#020202]" : "border-transparent"
+      }`}
     >
       <div className="flex gap-2 items-center w-full justify-between">
         <div className=" flex gap-4 items-center pl-4">
