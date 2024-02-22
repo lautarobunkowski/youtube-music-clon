@@ -75,9 +75,10 @@ const DropdownItemsInfo: string[] = [
 
 type Props = {
   setAsideActive: React.Dispatch<React.SetStateAction<boolean>>;
+  asideActive: boolean;
 };
 
-const Navbar = ({ setAsideActive }: Props) => {
+const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
 
@@ -92,106 +93,114 @@ const Navbar = ({ setAsideActive }: Props) => {
   }, []);
 
   return (
-    <nav
-      className={`z-30 h-[65px] w-full flex items-center fixed`}
-    >
-      {/* <div className={`h-[65px] w-full ${
-        scroll > 0 ? "border-zinc-800 bg-[#020202]" : "border-transparent"
-      } fixed`}/> */}
-      <div className="flex gap-2 items-center w-full justify-between">
-        <div className=" flex gap-4 items-center pl-4">
-          <button
-            onClick={() => setAsideActive((value) => !value)}
-            className="rounded-full p-2 hover:bg-zinc-800 active:bg-zinc-600"
-          >
-            <Menu />
-          </button>
-          <Logo />
-        </div>
-        <div className="hidden flex-1 lg:flex lg:ml-4 xl:ml-24 items-center justify-center xl:justify-start">
-          <Input
-            type="search"
-            placeholder="Busca canciones, álbumes, artistas y pódcasts"
-            className="w-[480px] font-semibold h-[40px]"
-          />
-        </div>
-        <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
-          <Choromecast />
-          <DropdownMenu open={active} onOpenChange={() => setActive(!active)}>
-            <DropdownMenuTrigger>
-              <img
-                src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                alt="user"
-                className="w-7 object-cover aspect-square rounded-full"
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-zinc-800 border-none"
+    <>
+      <nav className={`z-30 h-[65px] w-full flex items-center fixed`}>
+        <div className="flex gap-2 items-center w-full justify-between">
+          <div className=" flex gap-4 items-center pl-4">
+            <button
+              onClick={() => setAsideActive((value) => !value)}
+              className="rounded-full p-2 hover:bg-zinc-800 active:bg-zinc-600"
             >
-              <DropdownMenuLabel className="w-[300px]">
-                <div className="flex flex-col items-center w-full gap-2 p-4">
-                  <div className="flex items-center gap-4 w-full">
-                    <img
-                      src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                      alt="user"
-                      className="w-10 h-10 object-cover aspect-square rounded-full"
-                    />
-                    <div className="flex flex-col">
-                      <p className="text-base">Lautaro</p>
-                      <p>lautibunko@gmail.com</p>
-                    </div>
-                  </div>
-                  <Link to="/#">
-                    <p className=" font-normal text-blue-500">
-                      Gestionar tu cuenta de Google
-                    </p>
-                  </Link>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="border-t border-zinc-700 mb-2" />
-              {DropdownItemsInfo.slice(0, 4).map((item, index) => {
-                return (
-                  <DropdownMenuItem
-                    key={`Dropdown-item-info-${index}`}
-                    onClick={() => setActive(false)}
-                  >
-                    <Link
-                      to={`/#`}
-                      className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
-                    >
+              <Menu />
+            </button>
+            <Logo />
+          </div>
+          <div
+            className={`hidden flex-1 lg:flex lg:ml-4 xl:ml-24 ${
+              asideActive ? "pl-20" : ""
+            } items-center justify-center xl:justify-start`}
+          >
+            <Input
+              type="search"
+              placeholder="Busca canciones, álbumes, artistas y pódcasts"
+              className={`w-[480px] font-semibold h-[40px] ${
+                scroll === 0 && "bg-white/10 transition duration-150"
+              }`}
+            />
+          </div>
+          <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
+            <Choromecast />
+            <DropdownMenu open={active} onOpenChange={() => setActive(!active)}>
+              <DropdownMenuTrigger>
+                <img
+                  src="https://avatars.githubusercontent.com/u/98718461?v=4"
+                  alt="user"
+                  className="w-7 object-cover aspect-square rounded-full"
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-zinc-800 border-none"
+              >
+                <DropdownMenuLabel className="w-[300px]">
+                  <div className="flex flex-col items-center w-full gap-2 p-4">
+                    <div className="flex items-center gap-4 w-full">
                       <img
-                        src="/icons/Alert.svg"
-                        alt=""
-                        className="w-6 h-6 mr-4"
+                        src="https://avatars.githubusercontent.com/u/98718461?v=4"
+                        alt="user"
+                        className="w-10 h-10 object-cover aspect-square rounded-full"
                       />
-                      <p className="">{item}</p>
+                      <div className="flex flex-col">
+                        <p className="text-base">Lautaro</p>
+                        <p>lautibunko@gmail.com</p>
+                      </div>
+                    </div>
+                    <Link to="/#">
+                      <p className=" font-normal text-blue-500">
+                        Gestionar tu cuenta de Google
+                      </p>
                     </Link>
-                  </DropdownMenuItem>
-                );
-              })}
-              <DropdownMenuSeparator className="border-t border-zinc-700 my-2" />
-              {DropdownItemsInfo.slice(4).map((item, index) => {
-                return (
-                  <DropdownMenuItem
-                    key={`Dropdown-item-info-${index}`}
-                    onClick={() => setActive(false)}
-                  >
-                    <Link
-                      to={`/#`}
-                      className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="border-t border-zinc-700 mb-2" />
+                {DropdownItemsInfo.slice(0, 4).map((item, index) => {
+                  return (
+                    <DropdownMenuItem
+                      key={`Dropdown-item-info-${index}`}
+                      onClick={() => setActive(false)}
                     >
-                      <img src="Alert.svg" alt="" className="w-6 h-6 mr-4" />
-                      <p className="">{item}</p>
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                      <Link
+                        to={`/#`}
+                        className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                      >
+                        <img
+                          src="/icons/Alert.svg"
+                          alt=""
+                          className="w-6 h-6 mr-4"
+                        />
+                        <p className="">{item}</p>
+                      </Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+                <DropdownMenuSeparator className="border-t border-zinc-700 my-2" />
+                {DropdownItemsInfo.slice(4).map((item, index) => {
+                  return (
+                    <DropdownMenuItem
+                      key={`Dropdown-item-info-${index}`}
+                      onClick={() => setActive(false)}
+                    >
+                      <Link
+                        to={`/#`}
+                        className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                      >
+                        <img src="Alert.svg" alt="" className="w-6 h-6 mr-4" />
+                        <p className="">{item}</p>
+                      </Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      <div
+        className={`h-[65px] w-[calc(100%-17px)] border-b ${
+          scroll > 0 ? "border-zinc-800 bg-[#020202]" : "border-transparent"
+        } fixed z-20 transition duration-150`}
+      />
+    </>
   );
 };
 
