@@ -91,10 +91,6 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const location = useLocation();
   // const navigate = useNavigate();
 
-  const redirect_uri = "http://localhost:5173";
-  const client_id = "1a33b30d0e0149059122e651bdd6827c";
-  const client_secret = "a8a5bcf9ee4149dd8e3093e2751f5c0e";
-
   useEffect(() => {
     const main = document.querySelector(".main");
 
