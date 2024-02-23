@@ -4,6 +4,7 @@ import Aside from "@components/Aside.tsx";
 import Main from "@components/Main.tsx";
 import Library from "@pages/Library.tsx";
 import Home from "@pages/Home.tsx";
+import Playlist from "@pages/Playlist";
 import { useState } from "React";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/library" element={<Library />}></Route>
+          <Route path="/library?/*" element={<Playlist />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Main>

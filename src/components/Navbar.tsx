@@ -83,14 +83,14 @@ type Props = {
 
 const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const { userLog } = useStore((state) => state);
-  const { setUserLog } = useStore((state) => state);
+  // const { setUserLog } = useStore((state) => state);
 
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
 
-  const client_id = import.meta.env.VITE_CLIENT_ID
-  const redirect_uri = import.meta.env.VITE_REDIRECT_URI
-  const client_secret = import.meta.env.VITE_CLIENT_SECRET
+  const client_id = import.meta.env.VITE_CLIENT_ID;
+  const redirect_uri = import.meta.env.VITE_REDIRECT_URI;
+  const client_secret = import.meta.env.VITE_CLIENT_SECRET;
 
   const location = useLocation();
   // const navigate = useNavigate();
@@ -116,7 +116,8 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const autenticateUser = async (spotyCode: string) => {
     try {
       const searchParams = new URLSearchParams({
-        grant_type: "client_credentials",
+        // grant_type: "client_credentials",
+        grant_type: "authorization_code",
         code: spotyCode,
         redirect_uri: redirect_uri,
       });
@@ -125,7 +126,7 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
         .post("https://accounts.spotify.com/api/token", searchParams, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": "Basic " + btoa(client_id + ":" + client_secret),
+            Authorization: "Basic " + btoa(client_id + ":" + client_secret),
           },
         })
         .then((res) => {

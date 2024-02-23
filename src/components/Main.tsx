@@ -9,10 +9,14 @@ const Main = ({ asideActive, children }: Props) => {
   return (
     <div
       className={`main w-full h-full pt-[65px] overflow-auto
-      ${asideActive ? "pl-[240px]" : "pl-[75px]"}
+      ${asideActive ? "sm:pl-[75px] min-[936px]:pl-[240px]" : "sm:pl-[75px]"}
       `}
     >
-      <div className={`${asideActive ? "px-[98px]" : "px-[183px]"}`}>
+      <div
+        className={`${
+          asideActive ? "xl:px-[98px]" : "xl:px-[183px]"
+        } px-4 sm:px-16 `}
+      >
         {children}
       </div>
     </div>
