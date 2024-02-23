@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "React";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
 import { Input } from "@/components/SearchBar.tsx";
 import {
@@ -10,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/Dropdown";
+import { Button } from "@components/ButtonLog";
+import useStore from "@store/store";
 
 const Menu = () => (
   <svg
@@ -79,8 +82,18 @@ type Props = {
 };
 
 const Navbar = ({ setAsideActive, asideActive }: Props) => {
+  const { userLog } = useStore((state) => state);
+  const { setUserLog } = useStore((state) => state);
+
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
+
+  const location = useLocation();
+  // const navigate = useNavigate();
+
+  const redirect_uri = "http://localhost:5173";
+  const client_id = "1a33b30d0e0149059122e651bdd6827c";
+  const client_secret = "a8a5bcf9ee4149dd8e3093e2751f5c0e";
 
   useEffect(() => {
     const main = document.querySelector(".main");
@@ -91,6 +104,50 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
       main?.removeEventListener("scroll", () => setScroll(main?.scrollTop));
     };
   }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const spotyCode = urlParams.get("code");
+    if (spotyCode) {
+      console.log(spotyCode);
+      autenticateUser(spotyCode);
+    }
+  }, []);
+
+  const autenticateUser = async (spotyCode: string) => {
+    try {
+      const searchParams = new URLSearchParams({
+        code: spotyCode,
+        grant_type: "authorization_code",
+        redirect_uri: redirect_uri,
+      });
+
+      axios
+        .post("https://accounts.spotify.com/api/token", searchParams, {
+          headers: {
+            Authorization: "Basic " + btoa(client_id + ":" + client_secret),
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+        .then((res) => {
+          localStorage.setItem("access_token", res.data.access_token);
+          localStorage.setItem("refresh_token", res.data.refresh_token);
+
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${res.data.access_token}`;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSpotifyLog = () => {
+    const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
+    setUserLog();
+    window.location.replace(spoty_url);
+    // navigate(spoty_url);
+  };
 
   return (
     <>
@@ -118,80 +175,99 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
               }`}
             />
           </div>
+
           <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
             <Choromecast />
-            <DropdownMenu open={active} onOpenChange={() => setActive(!active)}>
-              <DropdownMenuTrigger>
-                <img
-                  src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                  alt="user"
-                  className="w-7 object-cover aspect-square rounded-full"
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="bg-zinc-800 border-none"
+            {userLog ? (
+              <DropdownMenu
+                open={active}
+                onOpenChange={() => setActive(!active)}
               >
-                <DropdownMenuLabel className="w-[300px]">
-                  <div className="flex flex-col items-center w-full gap-2 p-4">
-                    <div className="flex items-center gap-4 w-full">
-                      <img
-                        src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                        alt="user"
-                        className="w-10 h-10 object-cover aspect-square rounded-full"
-                      />
-                      <div className="flex flex-col">
-                        <p className="text-base">Lautaro</p>
-                        <p>lautibunko@gmail.com</p>
-                      </div>
-                    </div>
-                    <Link to="/#">
-                      <p className=" font-normal text-blue-500">
-                        Gestionar tu cuenta de Google
-                      </p>
-                    </Link>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="border-t border-zinc-700 mb-2" />
-                {DropdownItemsInfo.slice(0, 4).map((item, index) => {
-                  return (
-                    <DropdownMenuItem
-                      key={`Dropdown-item-info-${index}`}
-                      onClick={() => setActive(false)}
-                    >
-                      <Link
-                        to={`/#`}
-                        className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
-                      >
+                <DropdownMenuTrigger>
+                  <img
+                    src="https://avatars.githubusercontent.com/u/98718461?v=4"
+                    alt="user"
+                    className="w-7 object-cover aspect-square rounded-full"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-zinc-800 border-none"
+                >
+                  <DropdownMenuLabel className="w-[300px]">
+                    <div className="flex flex-col items-center w-full gap-2 p-4">
+                      <div className="flex items-center gap-4 w-full">
                         <img
-                          src="/icons/Alert.svg"
-                          alt=""
-                          className="w-6 h-6 mr-4"
+                          src="https://avatars.githubusercontent.com/u/98718461?v=4"
+                          alt="user"
+                          className="w-10 h-10 object-cover aspect-square rounded-full"
                         />
-                        <p className="">{item}</p>
+                        <div className="flex flex-col">
+                          <p className="text-base">Lautaro</p>
+                          <p>lautibunko@gmail.com</p>
+                        </div>
+                      </div>
+                      <Link to="/#">
+                        <p className=" font-normal text-blue-500">
+                          Gestionar tu cuenta de Google
+                        </p>
                       </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-                <DropdownMenuSeparator className="border-t border-zinc-700 my-2" />
-                {DropdownItemsInfo.slice(4).map((item, index) => {
-                  return (
-                    <DropdownMenuItem
-                      key={`Dropdown-item-info-${index}`}
-                      onClick={() => setActive(false)}
-                    >
-                      <Link
-                        to={`/#`}
-                        className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="border-t border-zinc-700 mb-2" />
+                  {DropdownItemsInfo.slice(0, 4).map((item, index) => {
+                    return (
+                      <DropdownMenuItem
+                        key={`Dropdown-item-info-${index}`}
+                        onClick={() => setActive(false)}
                       >
-                        <img src="Alert.svg" alt="" className="w-6 h-6 mr-4" />
-                        <p className="">{item}</p>
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                        <Link
+                          to={`/#`}
+                          className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                        >
+                          <img
+                            src="/icons/Alert.svg"
+                            alt=""
+                            className="w-6 h-6 mr-4"
+                          />
+                          <p className="">{item}</p>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  <DropdownMenuSeparator className="border-t border-zinc-700 my-2" />
+                  {DropdownItemsInfo.slice(4).map((item, index) => {
+                    return (
+                      <DropdownMenuItem
+                        key={`Dropdown-item-info-${index}`}
+                        onClick={() => setActive(false)}
+                      >
+                        <Link
+                          to={`/#`}
+                          className="flex h-10 w-full hover:bg-zinc-700 items-center px-4"
+                        >
+                          <img
+                            src="Alert.svg"
+                            alt=""
+                            className="w-6 h-6 mr-4"
+                          />
+                          <p className="">{item}</p>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="outline"
+                className="bg-white text-black rounded-2xl text-md"
+                size="log"
+                onClick={handleSpotifyLog}
+              >
+                Acceder
+              </Button>
+            )}
           </div>
         </div>
       </nav>
