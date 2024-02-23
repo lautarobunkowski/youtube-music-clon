@@ -88,6 +88,10 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
 
+  const client_id = import.meta.env.VITE_CLIENT_ID
+  const redirect_uri = import.meta.env.VITE_REDIRECT_URI
+  const client_secret = import.meta.env.VITE_CLIENT_SECRET
+
   const location = useLocation();
   // const navigate = useNavigate();
 
@@ -105,7 +109,6 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
     const urlParams = new URLSearchParams(location.search);
     const spotyCode = urlParams.get("code");
     if (spotyCode) {
-      console.log(spotyCode);
       autenticateUser(spotyCode);
     }
   }, []);
@@ -113,16 +116,16 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const autenticateUser = async (spotyCode: string) => {
     try {
       const searchParams = new URLSearchParams({
+        grant_type: "client_credentials",
         code: spotyCode,
-        grant_type: "authorization_code",
         redirect_uri: redirect_uri,
       });
 
       axios
         .post("https://accounts.spotify.com/api/token", searchParams, {
           headers: {
-            Authorization: "Basic " + btoa(client_id + ":" + client_secret),
             "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic " + btoa(client_id + ":" + client_secret),
           },
         })
         .then((res) => {
@@ -140,9 +143,8 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
 
   const handleSpotifyLog = () => {
     const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
-    setUserLog();
     window.location.replace(spoty_url);
-    // navigate(spoty_url);
+    // setUserLog();
   };
 
   return (
