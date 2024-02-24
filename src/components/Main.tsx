@@ -14,8 +14,8 @@ const Main = ({ asideActive, children }: Props) => {
     >
       <div
         className={`${
-          asideActive ? "xl:px-[98px]" : "xl:px-[183px]"
-        } px-4 sm:px-16 `}
+          asideActive ? "xl:px-[98px]" : "2xl:px-[183px]"
+        } px-4 sm:px-16`}
       >
         {children}
       </div>

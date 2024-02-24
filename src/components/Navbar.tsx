@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "React";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+import axios from "@/axiosConfig.ts";
 
 import { Input } from "@/components/SearchBar.tsx";
 import {
@@ -122,21 +122,23 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
         redirect_uri: redirect_uri,
       });
 
-      axios
-        .post("https://accounts.spotify.com/api/token", searchParams, {
+      const {data: tokenData} = await axios.post("https://accounts.spotify.com/api/token", searchParams, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: "Basic " + btoa(client_id + ":" + client_secret),
           },
         })
-        .then((res) => {
-          localStorage.setItem("access_token", res.data.access_token);
-          localStorage.setItem("refresh_token", res.data.refresh_token);
+      localStorage.setItem("access_token", tokenData.access_token);
+      localStorage.setItem("refresh_token", tokenData.refresh_token)
 
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${res.data.access_token}`;
-        });
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${tokenData.access_token}`;
+
+      const {data: userData} = await axios("https://api.spotify.com/v1/me")
+      localStorage.setItem("user_data", JSON.stringify(userData))
+      console.log(userData)
+      
     } catch (error) {
       console.log(error);
     }

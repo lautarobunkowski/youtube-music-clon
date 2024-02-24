@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/axiosConfig.ts";
 import { useEffect, useState } from "React";
 import PlaylistCard from "@components/PlaylistCard.tsx";
 import type { Data, Item } from "@types/miselfPlaylist.ts";
@@ -10,7 +10,6 @@ const Library = () => {
     const fetchData = async () => {
       const response = await axios("https://api.spotify.com/v1/me/playlists");
       const data: Data = await response.data;
-      console.log(data);
       setPlaylists(data.items);
     };
     fetchData();

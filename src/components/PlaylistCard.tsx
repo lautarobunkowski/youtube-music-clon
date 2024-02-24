@@ -23,7 +23,7 @@ const PlaylistCard = ({ playlist }: Props) => {
     <div className="text-[15px] leading-4 font-normal max-w-[196px] flex flex-col items-center justify-start overflow-hidden">
       <Link
         to={`/playlist?list=${playlist.id}`}
-        className="rounded-md overflow-hidden w-full aspect-square"
+        className="rounded-md overflow-hidden w-full aspect-square "
       >
         <picture>
           <img
@@ -38,14 +38,16 @@ const PlaylistCard = ({ playlist }: Props) => {
           />
         </picture>
       </Link>
-      <div className="overflow-hidden max-h-[35px] mt-2">
-        <Link to={`/playlist?list=${playlist.id}`}>
+      <div className="mt-2">
+        <div className="max-h-[35px] overflow-hidden">
+        <Link to={`/playlist?list=${playlist.id}`} className="hover:underline">
           <p>{playlist.name}</p>
         </Link>
-      </div>
-      <div className="text-zinc-400">
+        </div>
+        <div className="text-zinc-400 mt-1">
         <p>Lista de reproducción</p>
         <span>LautaroB</span>
+      </div>
       </div>
     </div>
   );

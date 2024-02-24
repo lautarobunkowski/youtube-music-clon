@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
-import axios from "axios";
+// import axios from "axios";
+import axios from "@/axiosConfig.ts";
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "access_token"
