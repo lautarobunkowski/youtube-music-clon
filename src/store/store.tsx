@@ -26,11 +26,16 @@ export type Followers = {
   total: number;
 }
 
-const userData = localStorage.getItem("user_data")
+// const userData = localStorage.getItem("user_data")
+const prueba = {
+  display_name: "lautarobunkowski",
+}
+
+const json = JSON.stringify(prueba)
 
 const useStore = create<Store>((set) => ({
   userLog: false,
-  userData: JSON.parse(""),
+  userData: JSON.parse(json),
   setUserLog: () => set((state) => ({ userLog: !state.userLog })),
 }));
 

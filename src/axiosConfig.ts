@@ -16,6 +16,7 @@ const obtenerNuevoToken = async () => {
       "Content-Type":"application/x-www-form-urlencoded"
     }
   })
+  console.log(data)
   localStorage.setItem('access_token', data.accessToken);
   localStorage.setItem('refresh_token', data.refreshToken);
   return data.accessToken
@@ -41,7 +42,7 @@ axios.interceptors.response.use(
         // Si no se puede obtener un nuevo token, redirigir a la página de inicio de sesión o realizar otras acciones necesarias
         // Puedes manejar este caso de acuerdo a tus requerimientos
         // Por ejemplo:
-        window.location.href = '/'; // Redirigir a la página de inicio de sesión
+        // window.location.href = '/'; // Redirigir a la página de inicio de sesión
         return Promise.reject(error);
       }
     }

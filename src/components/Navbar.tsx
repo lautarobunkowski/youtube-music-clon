@@ -137,13 +137,13 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
 
       const {data: userData} = await axios("https://api.spotify.com/v1/me")
       localStorage.setItem("user_data", JSON.stringify(userData))
-      console.log(userData)
       
     } catch (error) {
       console.log(error);
     }
   };
 
+console.log(btoa(client_id + ":" + client_secret))
   const handleSpotifyLog = () => {
     const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
     window.location.replace(spoty_url);
