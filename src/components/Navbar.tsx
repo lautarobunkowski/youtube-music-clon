@@ -122,28 +122,30 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
         redirect_uri: redirect_uri,
       });
 
-      const {data: tokenData} = await axios.post("https://accounts.spotify.com/api/token", searchParams, {
+      const { data: tokenData } = await axios.post(
+        "https://accounts.spotify.com/api/token",
+        searchParams,
+        {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: "Basic " + btoa(client_id + ":" + client_secret),
           },
-        })
+        }
+      );
       localStorage.setItem("access_token", tokenData.access_token);
-      localStorage.setItem("refresh_token", tokenData.refresh_token)
+      localStorage.setItem("refresh_token", tokenData.refresh_token);
 
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${tokenData.access_token}`;
 
-      const {data: userData} = await axios("https://api.spotify.com/v1/me")
-      localStorage.setItem("user_data", JSON.stringify(userData))
-      
+      const { data: userData } = await axios("https://api.spotify.com/v1/me");
+      localStorage.setItem("user_data", JSON.stringify(userData));
     } catch (error) {
       console.log(error);
     }
   };
 
-console.log(btoa(client_id + ":" + client_secret))
   const handleSpotifyLog = () => {
     const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
     window.location.replace(spoty_url);
