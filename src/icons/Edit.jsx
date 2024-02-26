@@ -3,7 +3,6 @@ const Edit = () => (
     viewBox="0 0 24 24"
     preserveAspectRatio="xMidYMid meet"
     focusable="false"
-    class="style-scope yt-icon"
     height="24"
     width="24"
     fill="currentColor"

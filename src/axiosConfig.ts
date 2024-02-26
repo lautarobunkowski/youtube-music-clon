@@ -47,9 +47,12 @@ axios.interceptors.response.use(
         // Si no se puede obtener un nuevo token, redirigir a la página de inicio de sesión o realizar otras acciones necesarias
         // Puedes manejar este caso de acuerdo a tus requerimientos
         // Por ejemplo:
-        // window.location.href = '/'; // Redirigir a la página de inicio de sesión
+        window.location.href = "/"; // Redirigir a la página de inicio de sesión
         return Promise.reject(error);
       }
+    }
+    if (error.response.status === 400) {
+      window.location.href = "/"; // Redirigir a la página de inicio de sesión
     }
     return Promise.reject(error);
   }
