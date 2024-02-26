@@ -1,12 +1,13 @@
 import { useEffect, useState } from "React";
 import axios from "@/axiosConfig.ts";
 import { useLocation } from "react-router-dom";
-import type { Playlist, Item } from "@types/Playlist";
+import type { Album, Item } from "@types/album";
 import { Button as ButtonLib } from "@components/ButtonLog";
 import Button from "@components/Button";
 import Random from "@icons/Random.jsx";
 import Edit from "@icons/Edit.jsx";
-import { PlaylistSongsTable } from "@components/SongsTable";
+import { AlbumSongsTable } from "@components/SongsTable";
+import Explicit from "@icons/Explicit";
 
 const NoneImgSvg = () => (
   <svg
@@ -23,8 +24,8 @@ const NoneImgSvg = () => (
   </svg>
 );
 
-const Playlist = () => {
-  const [playlist, setPlaylist] = useState<Playlist>();
+const Album = () => {
+  const [album, setAlbum] = useState<Album>();
   const location = useLocation();
 
   const params = new URLSearchParams(location.search);
@@ -33,10 +34,10 @@ const Playlist = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios(
-        `https://api.spotify.com/v1/playlists/${playlistId}`
+        `https://api.spotify.com/v1/albums/${playlistId}`
       );
       const data = await response.data;
-      setPlaylist(data);
+      setAlbum(data);
       console.log(data);
     };
     fetchData();
@@ -44,8 +45,7 @@ const Playlist = () => {
 
   const minutesPerPlaylist = (tracks: Item[]) => {
     const time =
-      tracks.reduce((acc, track) => acc + track.track.duration_ms, 0) /
-      (1000 * 60);
+      tracks.reduce((acc, track) => acc + track.duration_ms, 0) / (1000 * 60);
     if (time < 10) {
       return (
         <>
@@ -59,14 +59,14 @@ const Playlist = () => {
 
   return (
     <div className="mt-14">
-      {playlist !== undefined && (
+      {album !== undefined && (
         <div>
           <div className="flex gap-x-10 items-center justify-start mb-12">
             <div>
               <picture>
-                {playlist.images ? (
+                {album.images ? (
                   <img
-                    src={playlist.images[0].url}
+                    src={album.images[0].url}
                     alt=""
                     className="w-40 h-40 aspect-square sm:w-[200px] sm:h-[200px] min-[936px]:w-[240px] min-[936px]:h-[240px] min-[1364px]:w-[264px] min-[1364px]:h-[264px]"
                   />
@@ -79,17 +79,24 @@ const Playlist = () => {
             </div>
             <div className="">
               <div className="max-h-[5rem] overflow-hidden max-w-[720px]">
-                <h3 className="font-bold text-4xl mb-4">{playlist.name}</h3>
+                <h3 className="font-bold text-4xl mb-4">{album.name}</h3>
               </div>
-              <div className="text-zinc-400">
-                <span>{playlist.public ? "private" : "public"}</span>
+              <div className="text-zinc-400 flex items-center gap-1">
+                <span className="inline-block">
+                  {album?.tracks.items.some((item) => item.explicit) && (
+                    <Explicit />
+                  )}
+                </span>
+                <span>Álbum</span>
                 <span> • </span>
-                {playlist.owner.display_name}
+                {album.artists[0].name}
+                <span> • </span>
+                {album.release_date.split("").slice(0, 4)}
               </div>
               <div className="mt-1 text-zinc-400">
-                <span>{playlist.tracks.total} pistas</span>
+                <span>{album.tracks.total} canciones</span>
                 <span> • </span>
-                {minutesPerPlaylist(playlist.tracks.items)}
+                {minutesPerPlaylist(album.tracks.items)}
               </div>
               <div className="mt-6">
                 <Button>
@@ -103,54 +110,11 @@ const Playlist = () => {
               </div>
             </div>
           </div>
-          <PlaylistSongsTable playlist={playlist} />
-          {/* <table className="table-auto text-left min-w-full divide-y-2 divide-gray-500/20">
-            <tbody>
-              {playlist.tracks.items.length > 0 ? (
-                playlist.tracks.items.map((track, index) => (
-                  <tr
-                    key={`track-${index}`}
-                    className="border-b border-zinc-800 h-12 font-semibold"
-                  >
-                    <td className="w-[550px]">
-                      <div
-                        className="flex ml-2 gap-x-6 items-center cursor-pointer"
-                        onClick={() => handlerPlayMusic(index)}
-                      >
-                        <img
-                          src={track.track.album.images[2]?.url}
-                          alt={track.track.name}
-                          className="w-8 h-8"
-                        />
-                        <h3>{track.track.name}</h3>
-                      </div>
-                    </td>
-                    <td>
-                      <Link
-                        to={`/channel/${track.track.artists[0].id}`}
-                        className="hover:underline text-zinc-500"
-                      >
-                        {track.track.artists[0].name}
-                      </Link>
-                    </td>
-                    <td className="text-end text-zinc-500">
-                      {formatTime(track.track.duration_ms)}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="text-xl text-zinc-500 font-extralight">
-                    No hay elementos en la lista de reproducción.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table> */}
+          <AlbumSongsTable album={album} />
         </div>
       )}
     </div>
   );
 };
 
-export default Playlist;
+export default Album;

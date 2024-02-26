@@ -1,11 +1,11 @@
 import { useEffect, useState } from "React";
-import { useStore } from "@store/store";
+// import useStore  from "@store/store";
 import { useParams } from "react-router-dom";
 import axios from "@/axiosConfig";
-import type { Channel } from "@types/Channel";
+import type { Channel } from "@/types/channel";
 import Button from "@/components/Button";
 import Random from "@icons/Random";
-import SongsTable from "@components/SongsTable";
+import { SongsTable } from "@components/SongsTable";
 
 const Channel = () => {
   const [channel, setChannel] = useState<Channel>();
@@ -23,7 +23,7 @@ const Channel = () => {
       const { data } = await axios(
         `https://api.spotify.com/v1/artists/${id}/top-tracks?market=ES`
       );
-      setTopTracks(data.tracks);
+      setTopTracks(data);
       console.log(data);
     };
     getArtistTopTracks();
