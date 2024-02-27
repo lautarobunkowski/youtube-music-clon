@@ -99,10 +99,10 @@ const Aside = ({ asideActive }: Props) => {
       className={`z-10 border-r flex flex-col justify-start items-center text-[10px] ${
         scroll > 0 ? "bg-[#020202] border-zinc-800" : "border-transparent"
       } ${
-        asideActive ? "fixed w-[240px]" : "w-[75px] hidden sm:fixed"
+        asideActive ? "fixed w-[240px]" : "w-[75px] hidden min-[615px]:block sm:fixed"
       } h-full pt-[65px] ${
         asideActive && scroll === 0 ? "bg-[#020202] border-zinc-800" : ""
-      } transition duration-150 sm:block`}
+      } transition duration-150`}
     >
       <ul className="w-full p-2 overflow-x-auto">
         <li>

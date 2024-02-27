@@ -111,6 +111,7 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
     songId: string,
     index: number
   ) => {
+    if(!isPlaying)setIsPlaying();
     if (currentSong.id === songId) {
       if (isPlaying) {
         await axios.put(`https://api.spotify.com/v1/me/player/pause`);
@@ -122,9 +123,6 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
           },
           position_ms: 0,
         });
-        if (!isPlaying) {
-          setIsPlaying();
-        }
       }
     } else {
       await axios.put(`https://api.spotify.com/v1/me/player/play`, {
@@ -134,9 +132,6 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
         },
         position_ms: 0,
       });
-      if (!isPlaying) {
-        setIsPlaying();
-      }
     }
     setCurrentSong({
       id: songId,
