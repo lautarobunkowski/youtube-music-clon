@@ -62,7 +62,7 @@ const Channel = () => {
             </div>
             <div className="mt-20">
               <h3 className="font-bold text-xl mb-6">Canciones</h3>
-              <SongsTable tracks={topTracks} />
+              {topTracks && <SongsTable tracks={topTracks} />}
             </div>
           </div>
           <div

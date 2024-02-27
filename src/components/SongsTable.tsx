@@ -4,15 +4,16 @@ import type { MostPopularSongs } from "@types/mostPopularSongs";
 import type { Album } from "@types/album";
 import { Link } from "react-router-dom";
 import useStore from "@store/store";
-
-export type PropsSongsTable = {
-  tracks: MostPopularSongs;
-};
+import Play from "@icons/Play";
 
 const formatTime = (time: number) => {
   const seconds = Math.floor((time / 1000) % 60);
   const minutes = Math.floor(time / 1000 / 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+
+export type PropsSongsTable = {
+  tracks: MostPopularSongs;
 };
 
 export const SongsTable = ({ tracks }: PropsSongsTable) => {
@@ -36,7 +37,7 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
   return (
     <table className="table-auto text-left min-w-full divide-y-2 divide-gray-500/20">
       <tbody>
-        {tracks.tracks !== undefined ? (
+        {tracks.tracks ? (
           tracks.tracks.slice(0, 5).map((track, index) => (
             <tr
               key={`track-${index}`}
@@ -44,14 +45,20 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
             >
               <td className="w-[550px]">
                 <div
-                  className="flex ml-2 gap-x-6 items-center cursor-pointer"
+                  className="group flex ml-2 gap-x-6 items-center cursor-pointer"
                   onClick={() => handlerPlayMusic()}
                 >
-                  <img
-                    src={track.album.images[2]?.url}
-                    alt={track.name}
-                    className="w-8 h-8"
-                  />
+                  <div className="relative w-8 h-8">
+                    <img
+                      src={track.album.images[2]?.url}
+                      alt={track.name}
+                      className="w-full h-full"
+                    />
+                    <div className="group-hover:bg-black/80 absolute top-0 left-0 w-full h-full"></div>
+                    <div className="absolute top-2 left-2 invisible group-hover:visible ">
+                      <Play />
+                    </div>
+                  </div>
                   <h3>{track.name}</h3>
                 </div>
               </td>
@@ -117,18 +124,24 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
           playlist.tracks.items.map((track, index) => (
             <tr
               key={`track-${index}`}
-              className="border-b border-zinc-800 h-12 font-semibold"
+              className="group border-b border-zinc-800 h-12 font-semibold"
             >
               <td className="w-[550px]">
                 <div
                   className="flex ml-2 gap-x-6 items-center cursor-pointer"
                   onClick={() => handlerPlayMusic()}
                 >
-                  <img
-                    src={track.track.album.images[2]?.url}
-                    alt={track.track.name}
-                    className="w-8 h-8"
-                  />
+                  <div className="relative w-8 h-8">
+                    <img
+                      src={track.track.album.images[2]?.url}
+                      alt={track.track.name}
+                      className="w-full h-full"
+                    />
+                    <div className="group-hover:bg-black/80 absolute top-0 left-0 w-full h-full"></div>
+                    <div className="absolute top-2 left-2 invisible group-hover:visible ">
+                      <Play />
+                    </div>
+                  </div>
                   <h3>{track.track.name}</h3>
                 </div>
               </td>
@@ -140,8 +153,15 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
                   {track.track.artists[0].name}
                 </Link>
               </td>
-              <td className="text-end text-zinc-500">
-                {formatTime(track.track.duration_ms)}
+              <td className=" text-zinc-500 relative">
+                <div className=" flex items-center justify-end">
+                  <div className="flex items-center justify-center">
+                    <div className="invisible group-hover:visible absolute w-5 h-5 border border-white cursor-pointer hover:bg-zinc-800"></div>
+                    <span className="group-hover:invisible">
+                      {formatTime(track.track.duration_ms)}
+                    </span>
+                  </div>
+                </div>
               </td>
             </tr>
           ))
@@ -186,23 +206,33 @@ export const AlbumSongsTable = ({ album }: PropsAlbumSongsTable) => {
           album.tracks.items.map((track, index) => (
             <tr
               key={`track-${index}`}
-              className="border-b border-zinc-800 h-12 font-semibold"
+              className="group border-b border-zinc-800 h-12 font-semibold"
             >
               <td className="w-[550px]">
                 <div
-                  className="flex ml-2 gap-x-6 items-center cursor-pointer"
+                  className="group flex ml-4 gap-x-6 items-center cursor-pointer"
                   onClick={() => handlerPlayMusic()}
                 >
-                  <img
-                    src={album.images[2]?.url}
-                    alt={track.name}
-                    className="w-8 h-8"
-                  />
+                  <div className="relative flex items-center justify-center">
+                    <p className="text-zinc-500 group-hover:invisible">
+                      {index + 1}
+                    </p>
+                    <div className="absolute invisible group-hover:visible ">
+                      <Play />
+                    </div>
+                  </div>
                   <h3>{track.name}</h3>
                 </div>
               </td>
-              <td className="text-end text-zinc-500">
-                {formatTime(track.duration_ms)}
+              <td className=" text-zinc-500 relative">
+                <div className=" flex items-center justify-end">
+                  <div className="flex items-center justify-center">
+                    <div className="invisible group-hover:visible absolute w-5 h-5 border border-white cursor-pointer hover:bg-zinc-800"></div>
+                    <span className="group-hover:invisible">
+                      {formatTime(track.duration_ms)}
+                    </span>
+                  </div>
+                </div>
               </td>
             </tr>
           ))

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "React";
 import axios from "@/axiosConfig.ts";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import type { Album, Item } from "@types/album";
 import { Button as ButtonLib } from "@components/ButtonLog";
 import Button from "@components/Button";
@@ -87,9 +87,14 @@ const Album = () => {
                     <Explicit />
                   )}
                 </span>
-                <span>Álbum</span>
+                <span>{album.total_tracks > 1 ? "Álbum" : "Single"}</span>
                 <span> • </span>
-                {album.artists[0].name}
+                <Link
+                  to={`/channel/${album.artists[0].id}`}
+                  className="hover:underline"
+                >
+                  {album.artists[0].name}
+                </Link>
                 <span> • </span>
                 {album.release_date.split("").slice(0, 4)}
               </div>
