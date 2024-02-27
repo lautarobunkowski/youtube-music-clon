@@ -6,7 +6,14 @@ type Store = {
   userData: UserData | undefined;
   isPlaying: boolean;
   setIsPlaying: () => void;
+  currentSong: CurrentSong
+  setCurrentSong: (value:CurrentSong) => void;
 };
+
+export type CurrentSong = {
+  id: string,
+  duration_ms?: number
+}
 
 export type UserData = {
   display_name: string;
@@ -41,6 +48,11 @@ const useStore = create<Store>((set) => ({
   userData: JSON.parse(json),
   isPlaying: false,
   setIsPlaying: () => set((state) => ({ isPlaying: !state.isPlaying })),
+  currentSong: {
+    id: "",
+    duration_ms: 0
+  },
+  setCurrentSong: (value) => set((state) => ({currentSong: {...value}}))
 }));
 
 export default useStore;

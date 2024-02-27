@@ -147,7 +147,17 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   };
 
   const handleSpotifyLog = () => {
-    const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
+    const scope = [
+      "user-read-email",
+      "user-read-private",
+      "user-modify-playback-state",
+      "user-read-playback-state",
+      "user-read-currently-playing",
+      "user-read-recently-played",
+      "user-read-playback-position",
+      "user-top-read"
+    ]
+    const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scope.join(" ")}&show_dialog=true`;
     window.location.replace(spoty_url);
     // setUserLog();
   };

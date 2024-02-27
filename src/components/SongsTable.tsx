@@ -5,6 +5,7 @@ import type { Album } from "@types/album";
 import { Link } from "react-router-dom";
 import useStore from "@store/store";
 import Play from "@icons/Play";
+import axios from "@/axiosConfig";
 
 const formatTime = (time: number) => {
   const seconds = Math.floor((time / 1000) % 60);
@@ -101,20 +102,42 @@ export type PropsPlaylistSongsTable = {
 
 export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
   const { setIsPlaying } = useStore((state) => state);
+  const { isPlaying } = useStore((state) => state);
+  const { setCurrentSong } = useStore((state) => state);
+  const { currentSong } = useStore((state) => state);
 
-  const handlerPlayMusic = async () => {
-    // const response = await axios.put(
-    //   `https://api.spotify.com/v1/me/player/play/device_id=0d1841b0976bae2a3a310dd74c0f3df354899bc8
-    //   `,
-    //   {
-    //     context_uri: `spotify:playlist:${playlistId}`,
-    //     offset: {
-    //       position: position,
-    //     },
-    //     position_ms: 0,
-    //   }
-    // );
-    setIsPlaying();
+  const handlerPlayMusic = async (playlistId:string,songId:string,index:number) => {
+    if(currentSong.id === songId){
+      if(isPlaying){
+        await axios.put(
+          `https://api.spotify.com/v1/me/player/pause`);
+      } else {
+        await axios.put(
+          `https://api.spotify.com/v1/me/player/play`,
+          {
+            "context_uri": `spotify:playlist:${playlist}`,
+            "offset": {
+                "position": index
+            },
+            "position_ms": currentSong.duration_ms
+        });
+      }
+    } else {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/play`,
+        {
+          "context_uri": `spotify:playlist:${playlistId}`,
+          "offset": {
+              "position": index
+          },
+          "position_ms": 0
+      });
+    }
+    setCurrentSong({
+      id:songId,
+      duration_ms: 50000 
+    })
+    if (!isPlaying) return setIsPlaying();
   };
 
   return (
@@ -129,7 +152,7 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
               <td className="w-[550px]">
                 <div
                   className="flex ml-2 gap-x-6 items-center cursor-pointer"
-                  onClick={() => handlerPlayMusic()}
+                  onClick={() => handlerPlayMusic(playlist.id,track.track.id,index)}
                 >
                   <div className="relative w-8 h-8">
                     <img
