@@ -16,7 +16,7 @@ const Channel = () => {
     const fetchData = async () => {
       const { data } = await axios(`https://api.spotify.com/v1/artists/${id}`);
       setChannel(data);
-      // console.log(data);
+      console.log(data);
     };
     fetchData();
     const getArtistTopTracks = async () => {
@@ -24,7 +24,6 @@ const Channel = () => {
         `https://api.spotify.com/v1/artists/${id}/top-tracks?market=ES`
       );
       setTopTracks(data);
-      console.log(data);
     };
     getArtistTopTracks();
   }, [id]);
