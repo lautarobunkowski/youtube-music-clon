@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "React";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "@/axiosConfig.ts";
 
-import { Input } from "@/components/SearchBar.tsx";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +62,21 @@ const Choromecast = () => (
   </svg>
 );
 
+const Lupa = () => (
+    <svg
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      preserveAspectRatio="xMidYMid meet"
+      focusable="false"
+      width="24"
+      height="24"
+    >
+      <g>
+        <path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7s-7,3.13-7,7s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z"></path>
+      </g>
+    </svg>
+);
+
 const DropdownItemsInfo: string[] = [
   "Tu canal",
   "Suscribirse a Music Premium",
@@ -93,7 +107,7 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const client_secret = import.meta.env.VITE_CLIENT_SECRET;
 
   const location = useLocation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const main = document.querySelector(".main");
@@ -162,6 +176,13 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
     // setUserLog();
   };
 
+  const handlerSearch = (e) => {
+    e.preventDefault()
+    navigate("/search", {
+      replace:true
+    })
+  }
+
   return (
     <>
       <nav className={`z-30 h-[65px] w-full flex items-center fixed`}>
@@ -180,13 +201,14 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
               asideActive ? "pl-20" : ""
             } items-center justify-center xl:justify-start`}
           >
-            <Input
-              type="search"
-              placeholder="Busca canciones, álbumes, artistas y pódcasts"
-              className={`w-[480px] font-semibold h-[40px] ${
-                scroll === 0 && "bg-white/10 transition duration-150"
-              }`}
-            />
+            <form className="w-[480px] h-[40px] flex items-center relative left-0 " onSubmit={handlerSearch}>
+              <button type="submit" className="absolute w-14 h-full flex items-center justify-center text-[#858585] bg-transparent">
+                <Lupa/>
+              </button>
+              <input type="search" name="search" placeholder="Busca canciones, álbumes, artistas y pódcasts" className={`bg-transparent focus:bg-[#212121] w-full h-full font-semibold  focus:outline-none ring-1 ring-[#484848] focus:bg-transparent rounded-lg pl-14 pr-4 ${
+                  scroll === 0 && "bg-white/10 transition duration-150"
+                }`}/>
+            </form>
           </div>
 
           <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">

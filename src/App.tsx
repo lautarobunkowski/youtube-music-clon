@@ -7,6 +7,7 @@ import Home from "@pages/Home.tsx";
 import Playlist from "@pages/Playlist";
 import Channel from "@pages/Channel";
 import Album from "@pages/Album";
+import Search from "@pages/Search";
 import Player from "@/components/Player";
 import { useState } from "React";
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/album" element={<Album />}></Route>
           <Route path="/playlist" element={<Playlist />}></Route>
           <Route path="/library" element={<Library />}></Route>
+          <Route path="/search" element={<Search/>}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
