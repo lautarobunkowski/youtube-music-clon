@@ -79,6 +79,41 @@ const Search = () => {
           </ul>
         </div>
       </div>
+      <div className="">
+        <h4 className="font-bold text-2xl">Artistas</h4>
+        <div className="">
+          <ul>
+            {searchInfo?.artists.items.map((artist, index) => {
+              return (
+                <li
+                  key={`searched-album-${index}`}
+                  className={`${
+                    searchInfo?.artists.items.length - 1 === index
+                      ? "border-b-none"
+                      : "border-b border-zinc-700"
+                  } flex items-center py-4 px-2 gap-4 `}
+                >
+                  <picture className="w-14 h-14 aspect-square overflow-hidden">
+                    <img
+                      src={artist.images[2].url}
+                      alt={artist.name}
+                      className="w-14 h-14"
+                    />
+                  </picture>
+                  <div className="">
+                    <p className="font-medium text-base mb-1">{artist.name}</p>
+                    <div className="font-medium text-base text-zinc-400">
+                      <span>{artist.type}</span>
+                      <span> • </span>
+                      <span>suscriptores</span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };

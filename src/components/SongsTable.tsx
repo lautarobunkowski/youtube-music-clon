@@ -39,7 +39,7 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
     } else {
       await axios.put(`https://api.spotify.com/v1/me/player/play`, {
         uris: tracksId,
-        offset: index,
+        // offset: index,
         position_ms:0
       });
     }
@@ -82,7 +82,7 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
               </td>
               <td>
                 <Link
-                  to={`/channel/${track.artists[0].id}`}
+                  to={`/album?list=${track.album.id}`}
                   className="hover:underline text-zinc-500"
                 >
                   {track.artists[0].name}
