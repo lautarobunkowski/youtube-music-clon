@@ -51,7 +51,7 @@ const Search = () => {
                     searchInfo?.albums.items.length - 1 === index
                       ? "border-b-none"
                       : "border-b border-zinc-700"
-                  } flex items-center py-4 px-2 gap-4`}
+                  } flex items-center py-4 px-2 gap-4 `}
                 >
                   <picture className="w-14 h-14 aspect-square overflow-hidden">
                     <img
@@ -61,8 +61,8 @@ const Search = () => {
                     />
                   </picture>
                   <div className="">
-                    <p className="font-medium text-sm mb-1">{album.name}</p>
-                    <div className="font-medium text-sm text-zinc-400">
+                    <p className="font-medium text-base mb-1">{album.name}</p>
+                    <div className="font-medium text-base text-zinc-400">
                       <span className="inline-block">
                         {album.explicit && <Explicit />}
                       </span>

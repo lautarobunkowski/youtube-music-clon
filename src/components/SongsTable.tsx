@@ -1,5 +1,5 @@
 // import React from 'react'
-import type { Playlist, Item } from "@types/Playlist";
+import type { Playlist, Track } from "@types/Playlist";
 import type { MostPopularSongs } from "@types/mostPopularSongs";
 import type { Album } from "@types/album";
 import { Link } from "react-router-dom";
@@ -19,20 +19,35 @@ export type PropsSongsTable = {
 
 export const SongsTable = ({ tracks }: PropsSongsTable) => {
   const { setIsPlaying } = useStore((state) => state);
+  const { isPlaying } = useStore((state) => state);
+  const { setCurrentSong } = useStore((state) => state);
+  const { currentSong } = useStore((state) => state);
 
-  const handlerPlayMusic = async () => {
-    // const response = await axios.put(
-    //   `https://api.spotify.com/v1/me/player/play/device_id=0d1841b0976bae2a3a310dd74c0f3df354899bc8
-    //   `,
-    //   {
-    //     context_uri: `spotify:album:${playlistId}`,
-    //     offset: {
-    //       position: position,
-    //     },
-    //     position_ms: 0,
-    //   }
-    // );
+  const handlerPlayMusic = async (
+    tracks: Track[],
+    songId: string,
+    index: number
+  ) => {
+    const tracksId = tracks.map(track => track.uri)
+    console.log(tracksId)
+    if (currentSong.id === songId) {
+      if (isPlaying) {
+        await axios.put(`https://api.spotify.com/v1/me/player/pause`);
+      } else {
+        await axios.put(`https://api.spotify.com/v1/me/player/play`);
+      }
+    } else {
+      await axios.put(`https://api.spotify.com/v1/me/player/play`, {
+        uris: tracksId,
+        offset: index,
+        position_ms:0
+      });
+    }
     setIsPlaying();
+    setCurrentSong({
+      id: songId,
+      duration_ms: 50000,
+    });
   };
 
   return (
@@ -42,12 +57,14 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
           tracks.tracks.slice(0, 5).map((track, index) => (
             <tr
               key={`track-${index}`}
-              className="border-b border-zinc-800 h-12 font-semibold"
+              className="group border-b border-zinc-800 h-12 font-semibold"
             >
               <td className="w-[550px]">
                 <div
-                  className="group flex ml-2 gap-x-6 items-center cursor-pointer"
-                  onClick={() => handlerPlayMusic()}
+                  className="flex ml-2 gap-x-6 items-center cursor-pointer"
+                  onClick={() =>
+                    handlerPlayMusic(tracks.tracks, track.id, index)
+                  }
                 >
                   <div className="relative w-8 h-8">
                     <img
@@ -71,17 +88,16 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
                   {track.artists[0].name}
                 </Link>
               </td>
-              <td>
-                <Link
-                  to={`/album?list=${track.album.id}`}
-                  className="hover:underline text-zinc-500"
-                >
-                  {track.album.name}
-                </Link>
+              <td className=" text-zinc-500 relative">
+                <div className=" flex items-center justify-end">
+                  <div className="flex items-center justify-center">
+                    <div className="invisible group-hover:visible absolute w-5 h-5 border border-white cursor-pointer hover:bg-zinc-800"></div>
+                    <span className="group-hover:invisible">
+                      {formatTime(track.duration_ms)}
+                    </span>
+                  </div>
+                </div>
               </td>
-              {/* <td className="text-end text-zinc-500">
-                {formatTime(track.duration_ms)}
-              </td> */}
             </tr>
           ))
         ) : (
@@ -111,18 +127,11 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
     songId: string,
     index: number
   ) => {
-    if(!isPlaying)setIsPlaying();
     if (currentSong.id === songId) {
       if (isPlaying) {
         await axios.put(`https://api.spotify.com/v1/me/player/pause`);
       } else {
-        await axios.put(`https://api.spotify.com/v1/me/player/play`, {
-          context_uri: `spotify:playlist:${playlistId}`,
-          offset: {
-            position: 0,
-          },
-          position_ms: 0,
-        });
+        await axios.put(`https://api.spotify.com/v1/me/player/play`);
       }
     } else {
       await axios.put(`https://api.spotify.com/v1/me/player/play`, {
@@ -133,6 +142,7 @@ export const PlaylistSongsTable = ({ playlist }: PropsPlaylistSongsTable) => {
         position_ms: 0,
       });
     }
+    setIsPlaying();
     setCurrentSong({
       id: songId,
       duration_ms: 50000,
@@ -207,20 +217,35 @@ export type PropsAlbumSongsTable = {
 
 export const AlbumSongsTable = ({ album }: PropsAlbumSongsTable) => {
   const { setIsPlaying } = useStore((state) => state);
+  const { isPlaying } = useStore((state) => state);
+  const { setCurrentSong } = useStore((state) => state);
+  const { currentSong } = useStore((state) => state);
 
-  const handlerPlayMusic = async () => {
-    // const response = await axios.put(
-    //   `https://api.spotify.com/v1/me/player/play/device_id=0d1841b0976bae2a3a310dd74c0f3df354899bc8
-    //   `,
-    //   {
-    //     context_uri: `spotify:album:${playlistId}`,
-    //     offset: {
-    //       position: position,
-    //     },
-    //     position_ms: 0,
-    //   }
-    // );
+  const handlerPlayMusic = async (
+    albumId: string,
+    songId: string,
+    index: number
+  ) => {
+    if (currentSong.id === songId) {
+      if (isPlaying) {
+        await axios.put(`https://api.spotify.com/v1/me/player/pause`);
+      } else {
+        await axios.put(`https://api.spotify.com/v1/me/player/play`);
+      }
+    } else {
+      await axios.put(`https://api.spotify.com/v1/me/player/play`, {
+        context_uri: `spotify:album:${albumId}`,
+        offset: {
+          position: index,
+        },
+        position_ms: 0,
+      });
+    }
     setIsPlaying();
+    setCurrentSong({
+      id: songId,
+      duration_ms: 50000,
+    });
   };
 
   return (
@@ -234,19 +259,32 @@ export const AlbumSongsTable = ({ album }: PropsAlbumSongsTable) => {
             >
               <td className="w-[550px]">
                 <div
-                  className="group flex ml-4 gap-x-6 items-center cursor-pointer"
-                  onClick={() => handlerPlayMusic()}
+                  className="flex ml-2 gap-x-6 items-center cursor-pointer"
+                  onClick={() =>
+                    handlerPlayMusic(album.id, track.id, index)
+                  }
                 >
-                  <div className="relative flex items-center justify-center">
-                    <p className="text-zinc-500 group-hover:invisible">
-                      {index + 1}
-                    </p>
-                    <div className="absolute invisible group-hover:visible ">
+                  <div className="relative w-8 h-8">
+                    <img
+                      src={album.images[2]?.url}
+                      alt={track.name}
+                      className="w-full h-full"
+                    />
+                    <div className="group-hover:bg-black/80 absolute top-0 left-0 w-full h-full"></div>
+                    <div className="absolute top-2 left-2 invisible group-hover:visible ">
                       <Play />
                     </div>
                   </div>
                   <h3>{track.name}</h3>
                 </div>
+              </td>
+              <td>
+                <Link
+                  to={`/channel/${track.artists[0].id}`}
+                  className="hover:underline text-zinc-500"
+                >
+                  {track.artists[0].name}
+                </Link>
               </td>
               <td className=" text-zinc-500 relative">
                 <div className=" flex items-center justify-end">
