@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "React";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "@/axiosConfig.ts";
 
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/components/Dropdown";
 import { Button } from "@components/ButtonLog";
 import useStore from "@store/store";
+import SearchBar from "@components/SearchBar";
 
 const Menu = () => (
   <svg
@@ -62,21 +63,6 @@ const Choromecast = () => (
   </svg>
 );
 
-const Lupa = () => (
-    <svg
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      preserveAspectRatio="xMidYMid meet"
-      focusable="false"
-      width="24"
-      height="24"
-    >
-      <g>
-        <path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7s-7,3.13-7,7s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z"></path>
-      </g>
-    </svg>
-);
-
 const DropdownItemsInfo: string[] = [
   "Tu canal",
   "Suscribirse a Music Premium",
@@ -97,7 +83,6 @@ type Props = {
 
 const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const { userLog } = useStore((state) => state);
-  // const { setUserLog } = useStore((state) => state);
 
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
@@ -107,7 +92,6 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
   const client_secret = import.meta.env.VITE_CLIENT_SECRET;
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const main = document.querySelector(".main");
@@ -169,19 +153,14 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
       "user-read-currently-playing",
       "user-read-recently-played",
       "user-read-playback-position",
-      "user-top-read"
-    ]
-    const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scope.join(" ")}&show_dialog=true`;
+      "user-top-read",
+    ];
+    const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scope.join(
+      " "
+    )}&show_dialog=true`;
     window.location.replace(spoty_url);
     // setUserLog();
   };
-
-  const handlerSearch = (e) => {
-    e.preventDefault()
-    navigate("/search", {
-      replace:true
-    })
-  }
 
   return (
     <>
@@ -201,14 +180,7 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
               asideActive ? "pl-20" : ""
             } items-center justify-center xl:justify-start`}
           >
-            <form className="w-[480px] h-[40px] flex items-center relative left-0 " onSubmit={handlerSearch}>
-              <button type="submit" className="absolute w-14 h-full flex items-center justify-center text-[#858585] bg-transparent">
-                <Lupa/>
-              </button>
-              <input type="search" name="search" placeholder="Busca canciones, álbumes, artistas y pódcasts" className={`bg-transparent focus:bg-[#212121] w-full h-full font-semibold  focus:outline-none ring-1 ring-[#484848] focus:bg-transparent rounded-lg pl-14 pr-4 ${
-                  scroll === 0 && "bg-white/10 transition duration-150"
-                }`}/>
-            </form>
+            <SearchBar scroll={scroll} />
           </div>
 
           <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
