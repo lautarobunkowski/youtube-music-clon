@@ -1,5 +1,5 @@
 import { useState, useEffect } from "React";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import type { SearchData } from "@types/search";
 import Explicit from "@icons/Explicit";
@@ -40,7 +40,7 @@ const Search = () => {
   return (
     <div className="pt-4 my-0 mx-auto max-w-[860px]">
       <div className="">
-        <h4 className="font-bold text-2xl">Álbumes</h4>
+        <h4 className="font-bold text-2xl my-4">Álbumes</h4>
         <div className="">
           <ul>
             {searchInfo?.albums.items.map((album, index) => {
@@ -51,28 +51,33 @@ const Search = () => {
                     searchInfo?.albums.items.length - 1 === index
                       ? "border-b-none"
                       : "border-b border-zinc-700"
-                  } flex items-center py-4 px-2 gap-4 `}
+                  }`}
                 >
-                  <picture className="w-14 h-14 aspect-square overflow-hidden">
-                    <img
-                      src={album.images[2].url}
-                      alt={album.name}
-                      className="w-14 h-14"
-                    />
-                  </picture>
-                  <div className="">
-                    <p className="font-medium text-base mb-1">{album.name}</p>
-                    <div className="font-medium text-base text-zinc-400">
-                      <span className="inline-block">
-                        {album.explicit && <Explicit />}
-                      </span>
-                      <span>{album.type}</span>
-                      <span> • </span>
-                      <span>{album.artists[0].name}</span>
-                      <span> • </span>
-                      <span>{album.release_date.slice(0, 4)}</span>
+                  <Link
+                    to={`/album?list=${album.id}`}
+                    className=" flex items-center py-4 px-2 gap-4 "
+                  >
+                    <picture className="w-14 h-14 aspect-square overflow-hidden">
+                      <img
+                        src={album.images[2].url}
+                        alt={album.name}
+                        className="w-14 h-14"
+                      />
+                    </picture>
+                    <div className="">
+                      <p className="font-medium text-base mb-1">{album.name}</p>
+                      <div className="font-medium text-base text-zinc-400">
+                        <span className="inline-block">
+                          {album.explicit && <Explicit />}
+                        </span>
+                        <span>{album.type}</span>
+                        <span> • </span>
+                        <span>{album.artists[0].name}</span>
+                        <span> • </span>
+                        <span>{album.release_date.slice(0, 4)}</span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </li>
               );
             })}
@@ -80,7 +85,7 @@ const Search = () => {
         </div>
       </div>
       <div className="">
-        <h4 className="font-bold text-2xl">Artistas</h4>
+        <h4 className="font-bold text-2xl my-4">Artistas</h4>
         <div className="">
           <ul>
             {searchInfo?.artists.items.map((artist, index) => {

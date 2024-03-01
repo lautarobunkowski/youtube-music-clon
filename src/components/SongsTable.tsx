@@ -5,6 +5,7 @@ import type { Album } from "@types/album";
 import { Link } from "react-router-dom";
 import useStore from "@store/store";
 import Play from "@icons/Play";
+import Explicit from "@icons/Explicit";
 import axios from "@/axiosConfig";
 
 const formatTime = (time: number) => {
@@ -28,8 +29,8 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
     songId: string,
     index: number
   ) => {
-    const tracksId = tracks.map(track => track.uri)
-    console.log(tracksId)
+    const tracksId = tracks.map((track) => track.uri);
+    console.log(tracksId);
     if (currentSong.id === songId) {
       if (isPlaying) {
         await axios.put(`https://api.spotify.com/v1/me/player/pause`);
@@ -40,7 +41,7 @@ export const SongsTable = ({ tracks }: PropsSongsTable) => {
       await axios.put(`https://api.spotify.com/v1/me/player/play`, {
         uris: tracksId,
         // offset: index,
-        position_ms:0
+        position_ms: 0,
       });
     }
     setIsPlaying();
@@ -260,18 +261,14 @@ export const AlbumSongsTable = ({ album }: PropsAlbumSongsTable) => {
               <td className="w-[550px]">
                 <div
                   className="flex ml-2 gap-x-6 items-center cursor-pointer"
-                  onClick={() =>
-                    handlerPlayMusic(album.id, track.id, index)
-                  }
+                  onClick={() => handlerPlayMusic(album.id, track.id, index)}
                 >
-                  <div className="relative w-8 h-8">
-                    <img
-                      src={album.images[2]?.url}
-                      alt={track.name}
-                      className="w-full h-full"
-                    />
+                  <div className="relative">
+                    <span className="mx-2 group-hover:invisible">
+                      {index + 1}
+                    </span>
                     <div className="group-hover:bg-black/80 absolute top-0 left-0 w-full h-full"></div>
-                    <div className="absolute top-2 left-2 invisible group-hover:visible ">
+                    <div className="absolute top-1 left-1 invisible group-hover:visible ">
                       <Play />
                     </div>
                   </div>
@@ -279,12 +276,9 @@ export const AlbumSongsTable = ({ album }: PropsAlbumSongsTable) => {
                 </div>
               </td>
               <td>
-                <Link
-                  to={`/channel/${track.artists[0].id}`}
-                  className="hover:underline text-zinc-500"
-                >
-                  {track.artists[0].name}
-                </Link>
+                <span className="text-zinc-500">
+                  {track.explicit && <Explicit />}
+                </span>
               </td>
               <td className=" text-zinc-500 relative">
                 <div className=" flex items-center justify-end">
