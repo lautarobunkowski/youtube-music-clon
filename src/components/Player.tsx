@@ -16,22 +16,42 @@ import Volume from "@icons/Volume.jsx";
 
 const Player = () => {
   const [showSoundSlider, setShowSoundSlider] = useState(false);
+  const [timeSlider, setTimeSlider] = useState(0);
   const [track, setTrack] = useState<Track>();
   const { isPlaying } = useStore((state) => state);
   const { currentSong } = useStore((state) => state);
+  const { setPlaybackState } = useStore((state) => state);
+  const { playbackState } = useStore((state) => state);
+
+  useEffect(() => {
+    setPlaybackState();
+  }, [setPlaybackState]);
 
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios(
         `https://api.spotify.com/v1/tracks/${currentSong.id}`
       );
-      console.log(data);
       setTrack(data);
     };
     if (isPlaying && currentSong.id.length > 0) {
       fetchData();
     }
   }, [currentSong, isPlaying]);
+
+  // useEffect(() => {
+  //   if (track) {
+  //     const interval = setInterval(() => {
+  //       setTimeSlider((prevState) => prevState + 1);
+  //     }, 1000);
+
+  //     if (timeSlider === track.duration_ms / 1000) {
+  //       clearInterval(interval);
+  //     }
+
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [track, timeSlider]);
 
   return (
     <div
@@ -43,7 +63,15 @@ const Player = () => {
       } transition-all duration-500 h-[72px] flex items-center`}
     >
       <div className="group absolute -top-4 hover:-top-[17px] w-full h-4 py-4 cursor-pointer">
-        <Slider className="w-full bg-zinc-500 flex" />
+        <Slider
+          className="w-full bg-zinc-500 flex"
+          value={[timeSlider]}
+          max={track ? track.duration_ms / 1000 : 100}
+          onValueChange={([value]) => {
+            // console.log(value);
+            setTimeSlider(value);
+          }}
+        />
       </div>
       <div className="w-full mx-4 flex justify-between items-center">
         <div className="flex gap-6 items-center">
