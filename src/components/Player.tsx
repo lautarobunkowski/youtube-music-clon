@@ -17,16 +17,32 @@ import Volume from "@icons/Volume.jsx";
 const Player = () => {
   const [showSoundSlider, setShowSoundSlider] = useState(false);
   const [timeSlider, setTimeSlider] = useState(0);
+
   const [track, setTrack] = useState<Track>();
+
   const { isPlaying } = useStore((state) => state);
+  const { setIsPlaying } = useStore((state) => state);
+
   const { currentSong } = useStore((state) => state);
+
   const { setPlaybackState } = useStore((state) => state);
   const { playbackState } = useStore((state) => state);
+
+  const [volume, setVolume] = useState(100)
 
   useEffect(() => {
     setPlaybackState();
   }, [setPlaybackState]);
 
+  useEffect(() => {
+    setTrack(playbackState?.item)
+    if(playbackState){
+      setIsPlaying()
+      setVolume(playbackState.device.volume_percent)
+      setTimeSlider(playbackState.progress_ms/1000)
+    }
+  }, [playbackState, setIsPlaying])
+  
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios(
@@ -39,19 +55,19 @@ const Player = () => {
     }
   }, [currentSong, isPlaying]);
 
-  // useEffect(() => {
-  //   if (track) {
-  //     const interval = setInterval(() => {
-  //       setTimeSlider((prevState) => prevState + 1);
-  //     }, 1000);
+  useEffect(() => {
+    if (track) {
+      const interval = setInterval(() => {
+        setTimeSlider((prevState) => prevState + 1);
+      }, 1000);
 
-  //     if (timeSlider === track.duration_ms / 1000) {
-  //       clearInterval(interval);
-  //     }
+      if (timeSlider === track.duration_ms / 1000) {
+        clearInterval(interval);
+      }
 
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [track, timeSlider]);
+      return () => clearInterval(interval);
+    }
+  }, [track, timeSlider]);
 
   return (
     <div
@@ -67,8 +83,15 @@ const Player = () => {
           className="w-full bg-zinc-500 flex"
           value={[timeSlider]}
           max={track ? track.duration_ms / 1000 : 100}
+          onValueCommit={(([value]) => {
+            try {
+              axios.put(`https://api.spotify.com/v1/me/player/seek?position_ms=${value*1000}`)
+              setTimeSlider(value);
+            } catch (error) {
+              console.log(error)
+            }
+          })}
           onValueChange={([value]) => {
-            // console.log(value);
             setTimeSlider(value);
           }}
         />
@@ -120,7 +143,15 @@ const Player = () => {
                   : "opacity-0 invisible"
               }`}
             >
-              <Slider className="bg-zinc-500 flex " />
+              <Slider className="bg-zinc-500 flex " value={[volume]} onValueChange={([value]) => setVolume(value)} onValueCommit={([value]) => {
+                try {
+                  axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${value}`)
+                  setVolume(value)
+                  return value
+                } catch (error) {
+                  console.log(error)
+                }
+              }}/>
             </div>
             <div
               onMouseEnter={() => setShowSoundSlider(true)}

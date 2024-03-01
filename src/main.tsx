@@ -13,9 +13,9 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
 // axios.defaults.baseURL = "http://localhost:3001/";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

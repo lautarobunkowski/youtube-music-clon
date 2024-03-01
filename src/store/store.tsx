@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "@/axiosConfig";
+import { PlayBackState } from "@types/PlayBackState.ts";
 
 type Store = {
   userLog: boolean;
@@ -11,7 +12,7 @@ type Store = {
   setCurrentSong: (value: CurrentSong) => void;
   isShowPlayer: boolean;
   setIsShowerPlayer: () => void;
-  playbackState: null | [];
+  playbackState: null | PlayBackState;
   setPlaybackState: () => void;
 };
 

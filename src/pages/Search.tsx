@@ -39,7 +39,7 @@ const Search = () => {
 
   return (
     <div className="pt-4 my-0 mx-auto max-w-[860px]">
-      <div className="">
+      <div className="albumes">
         <h4 className="font-bold text-2xl my-4">Álbumes</h4>
         <div className="">
           <ul>
@@ -55,7 +55,7 @@ const Search = () => {
                 >
                   <Link
                     to={`/album?list=${album.id}`}
-                    className=" flex items-center py-4 px-2 gap-4 "
+                    className=" flex items-center py-3 px-2 gap-4 "
                   >
                     <picture className="w-14 h-14 aspect-square overflow-hidden">
                       <img
@@ -84,7 +84,7 @@ const Search = () => {
           </ul>
         </div>
       </div>
-      <div className="">
+      <div className="artistas">
         <h4 className="font-bold text-2xl my-4">Artistas</h4>
         <div className="">
           <ul>
@@ -96,8 +96,9 @@ const Search = () => {
                     searchInfo?.artists.items.length - 1 === index
                       ? "border-b-none"
                       : "border-b border-zinc-700"
-                  } flex items-center py-4 px-2 gap-4 `}
+                  }  `}
                 >
+                  <Link to={`/channel/${artist.id}`} className="flex items-center py-3 px-2 gap-4">
                   <picture className="w-14 h-14 aspect-square overflow-hidden">
                     <img
                       src={artist.images[2].url}
@@ -113,6 +114,87 @@ const Search = () => {
                       <span>suscriptores</span>
                     </div>
                   </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      <div className="canciones">
+        <h4 className="font-bold text-2xl my-4">Canciones</h4>
+        <div className="">
+          <ul>
+            {searchInfo?.tracks.items.map((track, index) => {
+              return (
+                <li
+                  key={`searched-album-${index}`}
+                  className={`${
+                    searchInfo?.tracks.items.length - 1 === index
+                      ? "border-b-none"
+                      : "border-b border-zinc-700"
+                  } flex items-center py-3 px-2 gap-4 `}
+                >
+                  <picture className="w-14 h-14 aspect-square overflow-hidden">
+                    <img
+                      src={track.album.images[2].url}
+                      alt={track.name}
+                      className="w-14 h-14"
+                    />
+                  </picture>
+                  <div className="">
+                    <Link to={`/`}>
+                    <p className="font-medium text-base mb-1">{track.name}</p>
+                    </Link>
+                    <div className="font-medium text-base text-zinc-400">
+                      <Link to={`/channel/${track.artists[0].id}`} className="hover:underline">
+                      <span>{track.artists[0].name}</span>
+                      </Link>
+                      <span> • </span>
+                      <Link to={`/album?list=${track.album.id}`} className="hover:underline">
+                      <span>{track.album.name}</span>
+                      </Link>
+                      <span> • </span>
+                      <span>3:00</span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      <div className="playlist">
+        <h4 className="font-bold text-2xl my-4">Playlist</h4>
+        <div className="">
+          <ul>
+            {searchInfo?.playlists.items.map((playlist, index) => {
+              return (
+                <li
+                  key={`searched-album-${index}`}
+                  className={`${
+                    searchInfo?.playlists.items.length - 1 === index
+                      ? "border-b-none"
+                      : "border-b border-zinc-700"
+                  }  `}
+                >
+                  <Link to={`/playlist?list=${playlist.id}`} className="flex items-center py-3 px-2 gap-4">
+                  <picture className="w-14 h-14 aspect-square overflow-hidden">
+                    <img
+                      src={playlist.images[0].url}
+                      alt={playlist.name}
+                      className="w-14 h-14"
+                    />
+                  </picture>
+                  <div className="">
+                    <p className="font-medium text-base mb-1">{playlist.name}</p>
+                    <div className="font-medium text-base text-zinc-400">
+                      <span>{playlist.type}</span>
+                      <span> • </span>
+                      <span>{playlist.owner?.display_name}</span>
+                    </div>
+                  </div>
+                  </Link>
                 </li>
               );
             })}
