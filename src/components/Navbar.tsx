@@ -82,7 +82,8 @@ type Props = {
 };
 
 const Navbar = ({ setAsideActive, asideActive }: Props) => {
-  const { userLog } = useStore((state) => state);
+  const { setUserData } = useStore((state) => state);
+  const { userData } = useStore((state) => state);
 
   const [active, setActive] = useState<boolean>(false);
   const [scroll, setScroll] = useState(0);
@@ -111,6 +112,10 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("user_data", JSON.stringify(userData));
+  }, [userData]);
+
   const autenticateUser = async (spotyCode: string) => {
     try {
       const searchParams = new URLSearchParams({
@@ -137,8 +142,7 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
         "Authorization"
       ] = `Bearer ${tokenData.access_token}`;
 
-      const { data: userData } = await axios("https://api.spotify.com/v1/me");
-      localStorage.setItem("user_data", JSON.stringify(userData));
+      setUserData();
     } catch (error) {
       console.log(error);
     }
@@ -185,17 +189,25 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
 
           <div className=" text-white gap-4 pr-[20px] md:pr-[50px] lg:pr-[56px] xl:pr-[100px] flex items-center">
             <Choromecast />
-            {userLog ? (
+            {userData ? (
               <DropdownMenu
                 open={active}
                 onOpenChange={() => setActive(!active)}
               >
-                <DropdownMenuTrigger>
-                  <img
-                    src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                    alt="user"
-                    className="w-7 object-cover aspect-square rounded-full"
-                  />
+                <DropdownMenuTrigger asChild>
+                  <div className="rounded-full bg-black w-8 h-8">
+                    {userData.images[0] ? (
+                      <img
+                        src={userData.images[0] ? userData.images[0] : ""}
+                        alt="user"
+                        className="w-full object-cover aspect-square"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span>{userData.display_name[0].toUpperCase()}</span>
+                      </div>
+                    )}
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
@@ -204,14 +216,24 @@ const Navbar = ({ setAsideActive, asideActive }: Props) => {
                   <DropdownMenuLabel className="w-[300px]">
                     <div className="flex flex-col items-center w-full gap-2 p-4">
                       <div className="flex items-center gap-4 w-full">
-                        <img
-                          src="https://avatars.githubusercontent.com/u/98718461?v=4"
-                          alt="user"
-                          className="w-10 h-10 object-cover aspect-square rounded-full"
-                        />
+                        <div className="rounded-full bg-black w-10 h-10">
+                          {userData.images[0] ? (
+                            <img
+                              src={userData.images[0] ? userData.images[0] : ""}
+                              alt="user"
+                              className="w-full object-cover aspect-square"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span>
+                                {userData.display_name[0].toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                         <div className="flex flex-col">
-                          <p className="text-base">Lautaro</p>
-                          <p>lautibunko@gmail.com</p>
+                          <p className="text-base">{userData.display_name}</p>
+                          <p>{userData.email}</p>
                         </div>
                       </div>
                       <Link to="/#">

@@ -5,7 +5,8 @@ import { PlayBackState } from "@types/PlayBackState.ts";
 type Store = {
   userLog: boolean;
   setUserLog: () => void;
-  userData: UserData | undefined;
+  userData: UserData | null;
+  setUserData: () => void;
   isPlaying: boolean;
   setIsPlaying: () => void;
   currentSong: CurrentSong;
@@ -29,8 +30,9 @@ export type UserData = {
   images: string[];
   type: string;
   uri: string;
+  email: string;
   followers: Followers;
-};
+} | null;
 
 export type ExternalUrls = {
   spotify: string;
@@ -41,24 +43,33 @@ export type Followers = {
   total: number;
 };
 
-// const userData = localStorage.getItem("user_data")
-const prueba = {
-  display_name: "lautarobunkowski",
-};
-
-const json = JSON.stringify(prueba);
+let userData: UserData;
+localStorage.getItem("user_data") !== null
+  ? (userData = JSON.parse(localStorage.getItem("user_data")))
+  : (userData = null);
 
 const useStore = create<Store>((set) => ({
   userLog: false,
   setUserLog: () => set((state) => ({ userLog: !state.userLog })),
-  userData: JSON.parse(json),
+  userData: userData,
+  setUserData: async () => {
+    try {
+      const { data } = await axios("https://api.spotify.com/v1/me");
+      console.log(data);
+      set((state) => {
+        return (state.userData = data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
   isPlaying: false,
   setIsPlaying: () => set((state) => ({ isPlaying: !state.isPlaying })),
   currentSong: {
     id: "",
     duration_ms: 0,
   },
-  setCurrentSong: (value) => set((state) => ({ currentSong: { ...value } })),
+  setCurrentSong: (value) => set(() => ({ currentSong: { ...value } })),
   isShowPlayer: false,
   setIsShowerPlayer: () =>
     set((state) => ({ isShowPlayer: !state.isShowPlayer })),
